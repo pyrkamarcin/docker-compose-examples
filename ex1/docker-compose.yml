@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  application:
+    image: nginx
+    volumes: 
+      - user-storage:/mnt/user/
+
+  application_users:
+    image: nginx
+    volumes: 
+      - user-storage:/mnt/application_external/user/
+
+  proxy:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    command: [nginx-debug, "-g", "daemon off;"]
+
+volumes: 
+  user-storage:

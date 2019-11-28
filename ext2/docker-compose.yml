@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+
+  traefik:
+    image: traefik:v2.0.4
+    command: 
+      - --log.level=INFO
+      - --providers.docker
+      - --api.insecure=true
+      - --entrypoints.web.address=:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports: 
+      - "80:80"
+      - "8080:8080"
+
+  http-1:
+    image: containous/whoami:v1.4.0
+    labels: 
+      traefik.http.routers.http-1.rule: Host(`http-1.localhost`)  
+      traefik.http.middlewares.test-auth.basicauth.users: test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/

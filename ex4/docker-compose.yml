@@ -1,0 +1,104 @@
+version: "3.7"
+
+services:
+
+  ghost:
+    container_name: ghost
+    image: ghost:3.0.0
+    restart: always
+    ports:
+      - 80:2368
+    environment:
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: ghost_user
+      database__connection__password: example
+      database__connection__database: ghost
+      url: http://localhost
+    depends_on:
+      - db
+    networks: 
+      - backend
+      - frontend
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      replicas: 7
+      resources:
+        limits:
+          memory: "128M"
+          cpus: "250m"
+        reservations:
+          memory: "64M"
+          cpus: "50m"
+      update_config:
+        parallelism: 1
+        delay: 30s
+        order: stop-first
+      mode: replicated
+
+  db:
+    container_name: db
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: ghost
+      MYSQL_USER: ghost_user
+      MYSQL_PASSWORD: example
+    volumes: 
+      - db-storage:/var/lib/mysql
+    networks: 
+      - backend
+    deploy:
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: on-failure
+    ports:
+      - 8080:8080
+    networks: 
+      - tools
+      - backend
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: "128M"
+          cpus: "500m"
+        reservations:
+          memory: "64M"
+          cpus: "250m"
+  
+  redis:
+    container_name: redis
+    image: redis:latest
+    volumes:
+      - redis-storage:/data
+    entrypoint: ["redis-server", "--appendonly", "yes"]
+    restart: always
+    networks: 
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: "128M"
+          cpus: "500m"
+        reservations:
+          memory: "64M"
+          cpus: "250m"
+      
+volumes: 
+  db-storage:
+    name: db-storage-data
+  redis-storage:
+    name: db-storage-data
+
+networks: 
+  backend:
+  tools:
+  frontend:

@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  my_node:
+    image: nginx
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
+        reservations:
+          cpus: '0.0001'
+          memory: 20M
