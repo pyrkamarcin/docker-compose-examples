@@ -3,9 +3,14 @@ services:
   app:
     image: jetalone/sails:latest
     working_dir: /application
+    restart: always
     volumes:
       - ./application:/application
     command: ["sails", "lift", "--silly", "--drop"]
+    # command: ["npm", "install"]
+    networks: 
+      - frontend
+      - backend
 
   proxy:
     image: nginx
@@ -14,6 +19,8 @@ services:
     ports:
       - "80:80"
     command: [nginx-debug, "-g", "daemon off;"]
+    networks: 
+      - frontend
 
   db:
     image: postgres
@@ -24,6 +31,8 @@ services:
       POSTGRES_USER: sails
       POSTGRES_DB: sails
       POSTGRES_PASSWORD: sails
+    networks: 
+      - backend
 
   redis:
     image: redis:latest
@@ -31,7 +40,13 @@ services:
       - redis-storage:/data
     entrypoint: ["redis-server", "--appendonly", "yes"]
     restart: always
+    networks: 
+      - backend
 
 volumes:
   db-storage:
   redis-storage:
+
+networks: 
+  backend:
+  frontend:

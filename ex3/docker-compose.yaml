@@ -1,7 +1,9 @@
 version: "3.7"
 services:
-  redis:
-    image: redis:alpine
+  my-whoami:
+    image: containous/whoami:v1.4.0
+    ports: 
+      - "80:80"
     deploy:
       replicas: 6
       update_config:
