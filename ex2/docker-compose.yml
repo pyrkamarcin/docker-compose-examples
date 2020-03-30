@@ -1,7 +1,17 @@
 version: "3.7"
 services:
+
+  deps:
+    image: jetalone/sails:2453463465
+    restart: always
+    command: ["sails", "lift", "--silly", "--drop"]
+    # command: ["npm", "install"]
+    networks: 
+      - frontend
+      - backend
   app:
-    image: jetalone/sails:latest
+    image: jetalone/sails
+    build: .
     working_dir: /application
     restart: always
     volumes:
@@ -11,7 +21,6 @@ services:
     networks: 
       - frontend
       - backend
-
   proxy:
     image: nginx
     volumes:
