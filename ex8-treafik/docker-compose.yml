@@ -16,6 +16,8 @@ services:
       - "8080:8080"
 
   http-1:
-    image: containous/whoami:v1.4.0
+    image: localhost:5000/test:latest
+    replicas: 3
     labels: 
-      traefik.http.routers.http-1.rule: Host(`http-1.localhost`)
+      traefik.http.routers.http-1.rule: Host(`app1.localhost`)
+      

@@ -11,6 +11,7 @@ services:
       - backend
   app:
     image: jetalone/sails
+    replicas: 5
     build: .
     working_dir: /application
     restart: always

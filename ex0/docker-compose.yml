@@ -17,6 +17,10 @@ services:
       - MYSQL_ROOT_PASSWORD=password
     volumes: 
       - db-storage:/var/lib/mysql
+      - ./conf/my.conf:/etc/mysql/my.conf
+    secrets:
+      - my_conf
+      - my_password
     deploy:
       resources:
         limits:
@@ -36,3 +40,9 @@ volumes:
       o: "size=10G"
       device: tmpfs
       type: tmpfs
+
+secrets:
+  my_conf:
+    file: ./conf/my.conf
+  my_password:
+    external: true
