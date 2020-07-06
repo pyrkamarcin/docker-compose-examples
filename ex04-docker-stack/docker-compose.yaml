@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  my-whoami:
+    image: containous/whoami:v1.4.0
+    ports: 
+      - "80:80"
+    deploy:
+      replicas: 6
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
