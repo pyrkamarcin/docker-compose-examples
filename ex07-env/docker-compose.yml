@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  my-nginx:
+    image: nginx:${VERSION}
+    ports:
+      - 80:80
+    networks:
+      - my-network
+
+networks:
+  my-network:
