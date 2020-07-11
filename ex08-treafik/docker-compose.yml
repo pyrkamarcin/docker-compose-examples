@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+
+  traefik:
+    image: traefik:v2.0.5
+    command:
+      - --log.level=INFO
+      - --providers.docker
+      - --api.insecure=true
+      - --entrypoints.web.address=:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "8080:8080"
+
+  http-1:
+    image: containous/whoami:v1.4.0
+    replicas: 3
+    labels:
+      traefik.http.routers.http-1.rule: Host(`app1.localhost`)
+      
